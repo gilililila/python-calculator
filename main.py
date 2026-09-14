@@ -1,7 +1,7 @@
 from function.add import add
-from function.subtract import subtract
 from function.divide import divide
 from function.multiply import multiply
+from function.subtract import subtract
 
 
 def main():

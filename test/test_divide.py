@@ -1,4 +1,5 @@
 import pytest
+
 from function.divide import divide
 
 
@@ -10,7 +11,7 @@ def test_divide_negative_nums():
 
 def test_divide_zero():
     assert divide(0, 5) == 0.0
-    with pytest.raises(ValueError, match="Cannot divide by zero."):
+    with pytest.raises(ValueError, match="Division by zero is not allowed."):
         divide(5, 0)
 
 def test_divide_mixed():
