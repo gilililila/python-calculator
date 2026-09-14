@@ -1,0 +1,94 @@
+# ==============================================================================
+# GitHub Actions CD (持续交付 / 自动化发版) 示例工作流
+# 适用技术栈: uv + ruff + hatchling + GitHub Release
+# ==============================================================================
+
+name: CD Example
+
+# 1. 触发事件配置 (Triggers)
+# 仅在推送符合语义化版本命名规范 (如 v1.0.0, v2.1.0) 的 Git Tag 时触发发版
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+# 2. 权限配置 (Permissions)
+# GITHUB_TOKEN 默认只有读取权限，创建 Release 并上传制品附件需要写权限 (contents: write)
+permissions:
+  contents: write
+
+jobs:
+  # 3. 自动化打包与发布任务
+  release:
+    name: Build & Release Package
+    runs-on: ubuntu-latest
+
+    steps:
+      # 步骤 1: 检出完整 Git 提交历史
+      # fetch-depth: 0 表示拉取全部提交历史和标签（默认浅克隆只拉取最新 1 条）。
+      # 这是生成两版本之间 Changelog 所必须的。
+      - name: Checkout full repository history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 步骤 2: 安装 uv 工具链
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      # 步骤 3: 准备 Python 运行时
+      - name: Set up Python
+        run: uv python install
+
+      # 步骤 4: 同步安装项目及其开发环境依赖
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      # 步骤 5: 发版质量门禁 1 - 代码风格检查 (Ruff)
+      # 确保发布的产物不带任何未解决的代码规范问题
+      - name: Run linting
+        run: uv run ruff check .
+
+      # 步骤 6: 发版质量门禁 2 - 自动化测试 (Pytest)
+      # 确保所有单元测试全部通过，杜绝发布存在回归缺陷的代码
+      - name: Run tests
+        run: uv run pytest -v
+
+      # 步骤 7: 构建 Python 分发制品 (Wheel 与 Source Distribution)
+      # uv build 会读取 pyproject.toml 中的 build-backend (如 hatchling)
+      # 自动将打包结果产出到 dist/ 目录下（包含 .whl 和 .tar.gz）
+      - name: Build distribution packages
+        run: uv build
+
+      # 步骤 8: 自动提取变更历史并生成 Release 说明 (Changelog)
+      # 逻辑: 找到当前 Tag 前的一个 Tag，若不存在则回退至仓库初始 Commit；
+      # 随后提取两者间的所有 commit 简短信息生成 CHANGELOG.md
+      - name: Generate changelog
+        id: changelog
+        run: |
+          echo "## What's Changed" > CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          git log $(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || git rev-list --max-parents=0 HEAD)..HEAD --pretty=format:"- %s (%h)" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          cat CHANGELOG.md
+
+      # 步骤 9: 创建 GitHub Release 并将构建产物上传至附件
+      # softprops/action-gh-release 会在 GitHub 仓库的 Releases 页面创建新版本：
+      # - body_path: 将 CHANGELOG.md 的内容作为版本说明
+      # - files: 将 dist/ 目录下的 .whl 和 .tar.gz 挂载到 Assets 供用户下载
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: CHANGELOG.md
+          files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 步骤 10 (进阶可选): 自动发布到官方 PyPI 软件仓库
+      # 若未来需要在 PyPI 上发布该包供全世界通过 pip install 安装，可取消以下注释：
+      # - name: Publish to PyPI
+      #   run: uv publish
+      #   env:
+      #     UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}

@@ -1,31 +1,59 @@
-name: CI
+# ==============================================================================
+# GitHub Actions CI (持续集成) 示例工作流
+# 适用技术栈: uv + ruff + pytest + Python 3.13+
+# ==============================================================================
 
+name: CI Example
+
+# 1. 触发事件配置 (Triggers)
 on:
+  # 当向 main 分支推送代码时触发
   push:
     branches: [main]
+  # 当向 main 分支发起 Pull Request (或有新 commit 追加到 PR) 时触发
   pull_request:
     branches: [main]
 
 jobs:
+  # 2. 自动化测试与检查任务
   test:
+    name: Lint & Test
+    # 运行在 GitHub 托管的最新 Ubuntu 虚拟机中
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      # 步骤 1: 检出仓库代码到虚拟机工作区
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.13
-        uses: actions/setup-python@v5
+      # 步骤 2: 安装 uv 包管理工具
+      # 使用 Astral 官方提供的 setup-uv action，并启用构建缓存
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.13"
+          # 开启 uv 缓存，后续流水线会自动复用已下载的依赖包，极大加快构建速度
+          enable-cache: true
 
+      # 步骤 3: 准备 Python 运行时
+      # uv 会根据项目配置 (pyproject.toml 或 .python-version) 自动安装匹配的 Python 版本
+      - name: Set up Python
+        run: uv python install
+
+      # 步骤 4: 同步安装项目及其开发依赖
+      # uv sync 会根据 uv.lock 锁定文件严格还原依赖，--dev 保证安装 ruff、pytest 等开发套件
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest flake8
+        run: uv sync --all-extras --dev
 
-      - name: Run flake8 linting
-        run: flake8 . --count --show-source --statistics
+      # 步骤 5: 执行 Ruff 代码规范与语法检查 (Linting)
+      # 若存在代码格式错误、未使用的导入或语法隐患，流程将在此处失败并阻止合并
+      - name: Run ruff check
+        run: uv run ruff check .
 
+      # 步骤 6 (可选): 检查代码格式是否符合 Ruff 格式化要求
+      # - name: Run ruff format check
+      #   run: uv run ruff format --check .
+
+      # 步骤 7: 执行 pytest 自动化单元测试
+      # -v 打印每个测试用例的详细执行结果
       - name: Run pytest
-        run: pytest -v
+        run: uv run pytest -v
