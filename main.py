@@ -1,5 +1,6 @@
 from function.add import add
 from function.subtract import subtract
+from function.divide import divide
 
 
 def main():
@@ -7,6 +8,8 @@ def main():
     print(f"The result of addition is: {add_result}")
     sub_result = subtract(5, 3)
     print(f"The result of subtraction is: {sub_result}")
+    div_result = divide(5, 2)
+    print(f"The result of division is: {div_result}")
 
 
 if __name__ == "__main__":
