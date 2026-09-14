@@ -1,4 +1,4 @@
-from function.add import add
+from calculator import add
 
 
 def test_add_positive_nums():

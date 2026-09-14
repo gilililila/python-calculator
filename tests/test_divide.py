@@ -1,6 +1,6 @@
 import pytest
 
-from function.divide import divide
+from calculator import divide
 
 
 def test_divide_positive_nums():

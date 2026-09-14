@@ -1,4 +1,4 @@
-from function.multiply import multiply
+from calculator import multiply
 
 
 def test_multiply_positive_nums():
