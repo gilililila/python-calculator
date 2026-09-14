@@ -17,3 +17,4 @@ def test_subtract_mixed():
     assert subtract(-5, 3) == -8
     assert subtract(0, -3) == 3
     assert subtract(-3, 0) == -3
+    assert subtract(0, 5) == -5
