@@ -1,7 +1,4 @@
-from function.add import add
-from function.divide import divide
-from function.multiply import multiply
-from function.subtract import subtract
+from calculator import add, divide, multiply, power, subtract
 
 
 def main():
@@ -13,6 +10,8 @@ def main():
     print(f"The result of multiplication is: {mul_result}")
     div_result = divide(5, 2)
     print(f"The result of division is: {div_result}")
+    power_result = power(2, 3)
+    print(f"The result of power is: {power_result}")
 
 
 if __name__ == "__main__":

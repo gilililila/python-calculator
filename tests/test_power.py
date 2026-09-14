@@ -1,4 +1,4 @@
-from function.power import power
+from calculator import power
 
 
 def test_power_positive_nums():

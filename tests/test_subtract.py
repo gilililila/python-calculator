@@ -1,4 +1,4 @@
-from function.subtract import subtract
+from calculator import subtract
 
 
 def test_subtract_positive():
