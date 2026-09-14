@@ -45,16 +45,16 @@
 
 | Lab | 标题 | 核心技能 | 预估耗时 |
 |:---|:---|:---|:---|
-| [Lab 0](./labs/lab00-setup.md) | 环境准备与双人工作区搭建 | GitHub 仓库创建、克隆、身份隔离 | 20 min |
-| [Lab 1](./labs/lab01-first-commit.md) | 第一次提交与 PR | 分支、提交、推送、PR 发起与合并 | 30 min |
-| [Lab 2](./labs/lab02-bob-joins.md) | Bob 加入协作 | Code Review、行级批注、追加提交 | 35 min |
-| [Lab 3](./labs/lab03-parallel-dev.md) | 并行开发 | 双人并行分支、异常处理、pytest.raises | 35 min |
-| [Lab 4](./labs/lab04-merge-conflict.md) | 合并冲突 | Merge Conflict 识别与解决 | 40 min |
-| [Lab 5](./labs/lab05-ci-setup.md) | CI 自动化 | GitHub Actions、Branch Protection | 40 min |
-| [Lab 6](./labs/lab06-ci-red-green.md) | CI 红绿灯 | 故障注入、日志排查、修复闭环 | 30 min |
-| [Lab 7](./labs/lab07-refactor.md) | 模块化重构 | Python 包结构、pyproject.toml | 35 min |
-| [Lab 8](./labs/lab08-cli.md) | CLI 交互入口 | REPL 循环、console_scripts | 30 min |
-| [Lab 9](./labs/lab09-cd-release.md) | CD 自动发版 | Tag 触发、Changelog、GitHub Release | 40 min |
+| [Lab 0](./docs/lab00-setup.md) | 环境准备与双人工作区搭建 | GitHub 仓库创建、克隆、身份隔离 | 20 min |
+| [Lab 1](./docs/lab01-first-commit.md) | 第一次提交与 PR | 分支、提交、推送、PR 发起与合并 | 30 min |
+| [Lab 2](./docs/lab02-bob-joins.md) | Bob 加入协作 | Code Review、行级批注、追加提交 | 35 min |
+| [Lab 3](./docs/lab03-parallel-dev.md) | 并行开发 | 双人并行分支、异常处理、pytest.raises | 35 min |
+| [Lab 4](./docs/lab04-merge-conflict.md) | 合并冲突 | Merge Conflict 识别与解决 | 40 min |
+| [Lab 5](./docs/lab05-ci-setup.md) | CI 自动化 | GitHub Actions、Branch Protection | 40 min |
+| [Lab 6](./docs/lab06-ci-red-green.md) | CI 红绿灯 | 故障注入、日志排查、修复闭环 | 30 min |
+| [Lab 7](./docs/lab07-refactor.md) | 模块化重构 | Python 包结构、pyproject.toml | 35 min |
+| [Lab 8](./docs/lab08-cli.md) | CLI 交互入口 | REPL 循环、console_scripts | 30 min |
+| [Lab 9](./docs/lab09-cd-release.md) | CD 自动发版 | Tag 触发、Changelog、GitHub Release | 40 min |
 | | **总计** | | **~335 min** |
 
 ---
@@ -94,7 +94,7 @@ graph LR
 
 准备好体验从代码小白到工程老手的蜕变了吗？
 
-👉 [立即开始 → Lab 0: 环境准备](./labs/lab00-setup.md)
+👉 [立即开始 → Lab 0: 环境准备](./docs/lab00-setup.md)
 
 ---
 ## 🎯 快速开始
